@@ -3,7 +3,11 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/fitbit4j-1.0.25.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/fitbit4j-1.0.25.jar" sourcepath="war/WEB-INF/lib/fitbit4j-1.0.25-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/Meditime101/war/WEB-INF/lib/fitbit4j-1.0.25-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/joda-time-2.3.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-logging-1.1.3.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-logging-adapters-1.1.3.jar"/>

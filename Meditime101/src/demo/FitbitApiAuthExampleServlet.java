@@ -76,6 +76,7 @@ public class FitbitApiAuthExampleServlet extends HttpServlet {
                 try {
                     // Get token credentials for user:
                     apiClientService.getTokenCredentials(new LocalUserDetail(resourceCredentials.getLocalUserId()));
+                    
                 } catch (FitbitAPIException e) {
                     throw new ServletException("Unable to finish authorization with Fitbit.", e);
                 }
