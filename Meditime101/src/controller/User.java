@@ -81,13 +81,17 @@ public class User extends HttpServlet {
 		try {
 			LocalUserDetail localUser = new LocalUserDetail(resourceCredentials.getLocalUserId());
 			UserInfo userInfo = apiClientService.getClient().getUserInfo(localUser);
+			
 			List<Device> deviceList = apiClientService.getClient().getDevices(localUser);
 			Device dev = deviceList.get(0);
+			
 			String alarmJson = apiClientService.getClient().getAlarms(new LocalUserDetail(resourceCredentials.getLocalUserId()), dev.getId());
 			request.setAttribute("userInfo", userInfo);
 			request.setAttribute("alarmJson", alarmJson);
-			request.getRequestDispatcher("/user.jsp").forward(request,
-					response);
+			
+			request.getRequestDispatcher("/user.jsp").forward(request, response);
+			
+			
 		} catch (FitbitAPIException e) {
 			throw new ServletException("Exception during getting user info", e);
 
