@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import util.FitbitApiAlarmAgent;
 import model.ResourceCredentials;
 import model.ResourceCredentialsAO;
 
@@ -23,6 +24,7 @@ import com.fitbit.api.client.FitbitApiSubscriptionStorageInMemoryImpl;
 import com.fitbit.api.client.LocalUserDetail;
 import com.fitbit.api.client.service.FitbitAPIClientService;
 import com.fitbit.api.common.model.user.UserInfo;
+import com.fitbit.api.common.model.devices.*;
 import com.fitbit.api.model.APIResourceCredentials;
 
 public class User extends HttpServlet {
@@ -59,8 +61,8 @@ public class User extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException {
-		FitbitAPIClientService<FitbitApiClientAgent> apiClientService = new FitbitAPIClientService<FitbitApiClientAgent>(
-				new FitbitApiClientAgent(apiBaseUrl, fitbitSiteBaseUrl,
+		FitbitAPIClientService<FitbitApiAlarmAgent> apiClientService = new FitbitAPIClientService<FitbitApiAlarmAgent>(
+				new FitbitApiAlarmAgent(apiBaseUrl, fitbitSiteBaseUrl,
 						credentialsCache), clientConsumerKey, clientSecret,
 				credentialsCache, entityCache, subscriptionStore);
 
@@ -77,9 +79,13 @@ public class User extends HttpServlet {
 				resourceCredentials.getLocalUserId()), resourceCredentials);
 
 		try {
-			UserInfo userInfo = apiClientService.getClient().getUserInfo(
-					new LocalUserDetail(resourceCredentials.getLocalUserId()));
+			LocalUserDetail localUser = new LocalUserDetail(resourceCredentials.getLocalUserId());
+			UserInfo userInfo = apiClientService.getClient().getUserInfo(localUser);
+			List<Device> deviceList = apiClientService.getClient().getDevices(localUser);
+			Device dev = deviceList.get(0);
+			String alarmJson = apiClientService.getClient().getAlarms(new LocalUserDetail(resourceCredentials.getLocalUserId()), dev.getId());
 			request.setAttribute("userInfo", userInfo);
+			request.setAttribute("alarmJson", alarmJson);
 			request.getRequestDispatcher("/user.jsp").forward(request,
 					response);
 		} catch (FitbitAPIException e) {
