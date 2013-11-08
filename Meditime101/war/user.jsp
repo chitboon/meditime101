@@ -59,7 +59,8 @@
     <tr>
         <td>Offset From UTC (Millis):</td>
         <td>${userInfo.offsetFromUTCMillis}</td>
-    </tr>
+    </tr>    
 </table>
+alarm json : <%= request.getAttribute("alarmJson") %>
 </body>
 </html>
