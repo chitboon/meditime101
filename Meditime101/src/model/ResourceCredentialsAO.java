@@ -14,6 +14,7 @@ public class ResourceCredentialsAO {
 	private static final Logger log = Logger.getLogger(ResourceCredentialsAO.class.getName());
 	EntityManager em;
 	
+	// add Resource Credentials
 	public boolean add(ResourceCredentials rc) {
 		em = EMF.get().createEntityManager();
 		em.persist(rc);
@@ -21,6 +22,7 @@ public class ResourceCredentialsAO {
 		return true;
 	}	
 	
+	// Get all Resource Credentials
 	public List<ResourceCredentials> getResourceCredentials() {
 		em = EMF.get().createEntityManager();
 		Query q = em.createQuery("select rc from ResourceCredentials rc");
