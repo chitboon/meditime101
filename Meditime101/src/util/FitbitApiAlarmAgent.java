@@ -33,7 +33,7 @@ public class FitbitApiAlarmAgent extends FitbitApiClientAgent {
 	
     public String getAlarms(LocalUserDetail localUser, String deviceId) throws FitbitAPIException {
         setAccessToken(localUser);
-        // Example: GET /1/user/-/devices/scale.json
+        // Example: GET /1/user/-/devices/tracker/456665/alarms.json
         String url = APIUtil.contextualizeUrl(getApiBaseUrl(), getApiVersion(), "/user/-/devices/tracker/"+deviceId+"/alarms", APIFormat.JSON);
         Response response = httpGet(url, true);
         throwExceptionIfError(response);
@@ -44,5 +44,15 @@ public class FitbitApiAlarmAgent extends FitbitApiClientAgent {
         }
     }
 	
-
+    public void addAlarms(LocalUserDetail localUser, String deviceId) throws FitbitAPIException {
+    	
+        setAccessToken(localUser);
+        //POST /1/user/-/devices/tracker/55777/alarms.json
+        String url = APIUtil.contextualizeUrl(getApiBaseUrl(), getApiVersion(), "/user/-/devices/tracker/" + deviceId, APIFormat.JSON);
+        try {
+            httpPost(url, null, true);
+        } catch (Exception e) {
+            throw new FitbitAPIException("Error adding alarm: " + e, e);
+        }
+}
 }
