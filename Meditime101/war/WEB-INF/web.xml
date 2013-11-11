@@ -13,6 +13,7 @@
         <servlet-name>FitbitApiAuthExampleServlet</servlet-name>
         <url-pattern>/fitbitApiAuthExample</url-pattern>
     </servlet-mapping>
+    
     <servlet>
         <servlet-name>Grant</servlet-name>
         <servlet-class>controller.Grant</servlet-class>
@@ -22,6 +23,7 @@
         <servlet-name>Grant</servlet-name>
         <url-pattern>/grant</url-pattern>
     </servlet-mapping>
+    
     <servlet>
         <servlet-name>User</servlet-name>
         <servlet-class>controller.User</servlet-class>
@@ -31,5 +33,16 @@
         <servlet-name>User</servlet-name>
         <url-pattern>/user</url-pattern>
     </servlet-mapping>    
+    
+        <servlet>
+        <servlet-name>FitbitApiAlarmAgent</servlet-name>
+        <servlet-class>util.FitbitApiAlarmAgent</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FitbitApiAlarmAgent</servlet-name>
+        <url-pattern>/alarmAgent</url-pattern>
+    </servlet-mapping>    
+    
 
 </web-app>

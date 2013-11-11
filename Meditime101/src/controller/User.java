@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import util.FitbitApiAlarmAgent;
 import model.ResourceCredentials;
 import model.ResourceCredentialsAO;
@@ -56,7 +59,6 @@ public class User extends HttpServlet {
 		} catch (IOException e) {
 			throw new ServletException("Exception during loading properties", e);
 		}
-
 	}
 
 	protected void doGet(HttpServletRequest request,
@@ -85,7 +87,39 @@ public class User extends HttpServlet {
 			List<Device> deviceList = apiClientService.getClient().getDevices(localUser);
 			Device dev = deviceList.get(0);
 			
-			String alarmJson = apiClientService.getClient().getAlarms(new LocalUserDetail(resourceCredentials.getLocalUserId()), dev.getId());
+			String alarmJson = apiClientService.getClient().getAlarms(localUser, dev.getId());
+			
+			//break up json string
+        	JSONObject jsonObject = new JSONObject(alarmJson);
+
+        	JSONArray alarmJsonArray = jsonObject.getJSONArray("trackerAlarms");
+        	
+        	for (int i = 0; i < alarmJsonArray.length(); i++) {
+
+                JSONObject testJsonObject = alarmJsonArray.getJSONObject(i);
+                
+                long alarmId = testJsonObject.getLong("alarmId");
+                boolean deleted = testJsonObject.getBoolean("deleted");
+                boolean enabled = testJsonObject.getBoolean("enabled");
+                boolean recurring = testJsonObject.getBoolean("recurring");
+                int snoozeCount = testJsonObject.getInt("snoozeCount");
+                int snoozeLength = testJsonObject.getInt("snoozeLength");
+                boolean syncedToDevice = testJsonObject.getBoolean("syncedToDevice");
+                String time = testJsonObject.getString("time");
+                String vibe = testJsonObject.getString("vibe");
+
+                request.setAttribute("vibe", vibe);
+                request.setAttribute("deleted", deleted);
+                request.setAttribute("enabled", enabled);
+                request.setAttribute("recurring", recurring);
+                request.setAttribute("syncedToDevice", syncedToDevice);
+                request.setAttribute("time", time);
+                request.setAttribute("alarmId", alarmId);
+                request.setAttribute("snoozeCount", snoozeCount);
+                request.setAttribute("snoozeLength", snoozeLength);
+                
+        	}
+			
 			request.setAttribute("userInfo", userInfo);
 			request.setAttribute("alarmJson", alarmJson);
 			
@@ -98,4 +132,36 @@ public class User extends HttpServlet {
 		}
 	}
 
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException {
+		FitbitAPIClientService<FitbitApiAlarmAgent> apiClientService = new FitbitAPIClientService<FitbitApiAlarmAgent>(
+				new FitbitApiAlarmAgent(apiBaseUrl, fitbitSiteBaseUrl,
+						credentialsCache), clientConsumerKey, clientSecret,
+				credentialsCache, entityCache, subscriptionStore);
+
+		ResourceCredentialsAO ao = new ResourceCredentialsAO();
+		List<ResourceCredentials> list = ao.getResourceCredentials();
+		ResourceCredentials rc = list.get(0);
+		APIResourceCredentials resourceCredentials = new APIResourceCredentials(
+				"-", "", "");
+		resourceCredentials.setAccessToken(rc.getAccessToken());
+		resourceCredentials.setAccessTokenSecret(rc.getAccessTokenSecret());
+		resourceCredentials.setResourceId(rc.getResourceId());
+		resourceCredentials.setLocalUserId(rc.getLocalUserId());
+		apiClientService.saveResourceCredentials(new LocalUserDetail(
+				resourceCredentials.getLocalUserId()), resourceCredentials);
+
+		try {
+			LocalUserDetail localUser = new LocalUserDetail(resourceCredentials.getLocalUserId());
+			
+			List<Device> deviceList = apiClientService.getClient().getDevices(localUser);
+			Device dev = deviceList.get(0);
+			
+			
+		} catch (FitbitAPIException e) {
+			throw new ServletException("Exception during getting user info", e);
+
+		}
+	}
+	
 }

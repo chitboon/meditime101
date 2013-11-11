@@ -33,22 +33,6 @@
         <td>${userInfo.weight}</td>
     </tr>
     <tr>
-        <td>Stride Lenght Walking:</td>
-        <td>${userInfo.strideLengthWalking}</td>
-    </tr>
-    <tr>
-        <td>Stride Lenght Running:</td>
-        <td>${userInfo.strideLengthRunning}</td>
-    </tr>
-    <tr>
-        <td>City:</td>
-        <td>${userInfo.city}</td>
-    </tr>
-    <tr>
-        <td>State:</td>
-        <td>${userInfo.state}</td>
-    </tr>
-    <tr>
         <td>Country:</td>
         <td>${userInfo.country}</td>
     </tr>
@@ -60,7 +44,43 @@
         <td>Offset From UTC (Millis):</td>
         <td>${userInfo.offsetFromUTCMillis}</td>
     </tr>    
+        <tr>
+        <td>Vibe :</td>
+        <td> <%= request.getAttribute("vibe") %></td>
+    </tr>     
+        <tr>
+        <td>deleted :</td>
+        <td> <%= request.getAttribute("deleted") %></td>
+    </tr>  
+        <tr>
+        <td>enabled :</td>
+        <td> <%= request.getAttribute("enabled") %></td>
+    </tr>   
+        <tr>
+        <td>recurring :</td>
+        <td> <%= request.getAttribute("recurring") %></td>
+    </tr>    
+        <tr>
+        <td>syncedToDevice :</td>
+        <td> <%= request.getAttribute("syncedToDevice") %></td>
+    </tr> 
+       <tr>
+        <td>time :</td>
+        <td> <%= request.getAttribute("time") %></td>
+    </tr> 
+    <tr>
+        <td>alarmId :</td>
+        <td> <%= request.getAttribute("alarmId") %></td>
+    </tr>
+       <tr>
+        <td>snoozeCount :</td>
+        <td> <%= request.getAttribute("snoozeCount") %></td>
+    </tr>
+       <tr>
+        <td>snoozeLength :</td>
+        <td> <%= request.getAttribute("snoozeLength") %></td>
+    </tr>
 </table>
-alarm json : <%= request.getAttribute("alarmJson") %>
+
 </body>
 </html>
