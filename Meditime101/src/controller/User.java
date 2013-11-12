@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONString;
 
 import util.FitbitApiAlarmAgent;
 import model.ResourceCredentials;
@@ -157,7 +158,24 @@ public class User extends HttpServlet {
 			List<Device> deviceList = apiClientService.getClient().getDevices(localUser);
 			Device dev = deviceList.get(0);
 			
+			request.getAttribute("period");
+			request.getAttribute("alarm");
+			request.getAttribute("occuring");
+	
+			boolean recurring = true;
+			boolean occuring = true;
+			String alarmTime = "11:00";
+			String [] weekDays = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};	
+
+			apiClientService.getClient().addAlarms(localUser, dev.getId(), alarmTime, recurring, occuring, weekDays);
 			
+            request.setAttribute("alarm", alarmTime);
+            request.setAttribute("recurring", recurring);
+            request.setAttribute("occuring", occuring);
+            request.setAttribute("weekDays", weekDays);
+
+            request.getRequestDispatcher("/AlarmResult.jsp").forward(request, response);
+            
 		} catch (FitbitAPIException e) {
 			throw new ServletException("Exception during getting user info", e);
 

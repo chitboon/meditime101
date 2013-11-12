@@ -35,13 +35,13 @@
     </servlet-mapping>    
     
         <servlet>
-        <servlet-name>FitbitApiAlarmAgent</servlet-name>
-        <servlet-class>util.FitbitApiAlarmAgent</servlet-class>
+        <servlet-name>User</servlet-name>
+        <servlet-class>controller.User</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>FitbitApiAlarmAgent</servlet-name>
-        <url-pattern>/alarmAgent</url-pattern>
+        <servlet-name>User</servlet-name>
+        <url-pattern>/setAlarm</url-pattern>
     </servlet-mapping>    
     
 
