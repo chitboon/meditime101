@@ -1,10 +1,12 @@
 package controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -133,53 +135,157 @@ public class User extends HttpServlet {
 		}
 	}
 
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ServletException {
-		FitbitAPIClientService<FitbitApiAlarmAgent> apiClientService = new FitbitAPIClientService<FitbitApiAlarmAgent>(
-				new FitbitApiAlarmAgent(apiBaseUrl, fitbitSiteBaseUrl,
-						credentialsCache), clientConsumerKey, clientSecret,
-				credentialsCache, entityCache, subscriptionStore);
+//	protected void doPost(HttpServletRequest request,
+//			HttpServletResponse response) throws IOException, ServletException {
+//		FitbitAPIClientService<FitbitApiAlarmAgent> apiClientService = new FitbitAPIClientService<FitbitApiAlarmAgent>(
+//				new FitbitApiAlarmAgent(apiBaseUrl, fitbitSiteBaseUrl,
+//						credentialsCache), clientConsumerKey, clientSecret,
+//				credentialsCache, entityCache, subscriptionStore);
+//
+//		ResourceCredentialsAO ao = new ResourceCredentialsAO();
+//		List<ResourceCredentials> list = ao.getResourceCredentials();
+//		ResourceCredentials rc = list.get(0);
+//		APIResourceCredentials resourceCredentials = new APIResourceCredentials(
+//				"-", "", "");
+//		resourceCredentials.setAccessToken(rc.getAccessToken());
+//		resourceCredentials.setAccessTokenSecret(rc.getAccessTokenSecret());
+//		resourceCredentials.setResourceId(rc.getResourceId());
+//		resourceCredentials.setLocalUserId(rc.getLocalUserId());
+//		apiClientService.saveResourceCredentials(new LocalUserDetail(
+//				resourceCredentials.getLocalUserId()), resourceCredentials);
+//
+//		try {
+//			LocalUserDetail localUser = new LocalUserDetail(resourceCredentials.getLocalUserId());
+//			
+//			List<Device> deviceList = apiClientService.getClient().getDevices(localUser);
+//			Device dev = deviceList.get(0);
+//			
+//			request.getAttribute("period");
+//			request.getAttribute("alarm");
+//			request.getAttribute("occuring");
+//	
+//			boolean recurring = true;
+//			boolean occuring = true;
+//			String alarmTime = "11:00";
+//			String [] weekDays = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};	
+//
+//			apiClientService.getClient().addAlarms(localUser, dev.getId(), alarmTime, recurring, occuring, weekDays);
+//			
+//            request.setAttribute("alarm", alarmTime);
+//            request.setAttribute("recurring", recurring);
+//            request.setAttribute("occuring", occuring);
+//            request.setAttribute("weekDays", weekDays);
+//
+//            request.getRequestDispatcher("/AlarmResult.jsp").forward(request, response);
+//            
+//		} catch (FitbitAPIException e) {
+//			throw new ServletException("Exception during getting user info", e);
+//
+//		}
+//	}
 
-		ResourceCredentialsAO ao = new ResourceCredentialsAO();
-		List<ResourceCredentials> list = ao.getResourceCredentials();
-		ResourceCredentials rc = list.get(0);
-		APIResourceCredentials resourceCredentials = new APIResourceCredentials(
-				"-", "", "");
-		resourceCredentials.setAccessToken(rc.getAccessToken());
-		resourceCredentials.setAccessTokenSecret(rc.getAccessTokenSecret());
-		resourceCredentials.setResourceId(rc.getResourceId());
-		resourceCredentials.setLocalUserId(rc.getLocalUserId());
-		apiClientService.saveResourceCredentials(new LocalUserDetail(
-				resourceCredentials.getLocalUserId()), resourceCredentials);
-
-		try {
-			LocalUserDetail localUser = new LocalUserDetail(resourceCredentials.getLocalUserId());
-			
-			List<Device> deviceList = apiClientService.getClient().getDevices(localUser);
-			Device dev = deviceList.get(0);
-			
-			request.getAttribute("period");
-			request.getAttribute("alarm");
-			request.getAttribute("occuring");
 	
-			boolean recurring = true;
-			boolean occuring = true;
-			String alarmTime = "11:00";
-			String [] weekDays = {"MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"};	
+	protected void doPost(HttpServletRequest request,
+	HttpServletResponse response) throws IOException, ServletException {
+FitbitAPIClientService<FitbitApiAlarmAgent> apiClientService = new FitbitAPIClientService<FitbitApiAlarmAgent>(
+		new FitbitApiAlarmAgent(apiBaseUrl, fitbitSiteBaseUrl,
+				credentialsCache), clientConsumerKey, clientSecret,
+		credentialsCache, entityCache, subscriptionStore);
 
-			apiClientService.getClient().addAlarms(localUser, dev.getId(), alarmTime, recurring, occuring, weekDays);
-			
-            request.setAttribute("alarm", alarmTime);
-            request.setAttribute("recurring", recurring);
-            request.setAttribute("occuring", occuring);
-            request.setAttribute("weekDays", weekDays);
+ResourceCredentialsAO ao = new ResourceCredentialsAO();
+List<ResourceCredentials> list = ao.getResourceCredentials();
+ResourceCredentials rc = list.get(0);
+APIResourceCredentials resourceCredentials = new APIResourceCredentials(
+		"-", "", "");
+resourceCredentials.setAccessToken(rc.getAccessToken());
+resourceCredentials.setAccessTokenSecret(rc.getAccessTokenSecret());
+resourceCredentials.setResourceId(rc.getResourceId());
+resourceCredentials.setLocalUserId(rc.getLocalUserId());
+apiClientService.saveResourceCredentials(new LocalUserDetail(
+		resourceCredentials.getLocalUserId()), resourceCredentials);
 
-            request.getRequestDispatcher("/AlarmResult.jsp").forward(request, response);
-            
-		} catch (FitbitAPIException e) {
-			throw new ServletException("Exception during getting user info", e);
+try {
+	LocalUserDetail localUser = new LocalUserDetail(resourceCredentials.getLocalUserId());
+	UserInfo userInfo = apiClientService.getClient().getUserInfo(localUser);
+	
+	List<Device> deviceList = apiClientService.getClient().getDevices(localUser);
+	Device dev = deviceList.get(0);
+	
+	String alarm = request.getParameter("alarmTime");
+	
+	String alarm1 = null;
+	
+	//substring the first 2 digit for calculation
+	String stHours = alarm.substring(0, 2);
+	String stMin = alarm.substring(3, 5);
+	
+	
+	//check the substring
+	PrintWriter out =response.getWriter();
+	out.print("stHours" + stHours + "\n");
+	out.println();
+	out.print("stMin" + stMin + "\n");
+		
+	int duration = Integer.parseInt(request.getParameter("duration"));
+	int times;
+	
+	//check how many alarms will there be
+	if(duration != 0)
+		times = (24/duration);
+	else
+		times=1;
+	
+	//Declare the array
+	String[] alarmArray = new String[times];
+	
+	//convert the first 2 digit to do calculation
+	int inHours = Integer.parseInt(stHours); 
+	
+	String alarmJson = null;
+	
+	for(int i = 0; i<times; i++)
+	{
+		
+		//convert the hours to string
+		stHours = Integer.toString(inHours);
+				
+		//check if the hours is 1 digit
+		if(inHours <10)
+			alarm1 = "0" + stHours + ":" + stMin + "+08:00";
+		else
+			alarm1 = stHours + ":" + stMin + "+08:00";
+				
+		alarmArray[i] = alarm1;
+		out.print(i + ": " +alarmArray[i]);
+		out.println();
+		
+		alarmJson = apiClientService.getClient().addAlarms(localUser, dev.getId(), request, alarmArray[i]);
+		
+		//Add the hours into the original time
+		inHours +=duration;
+		//check if the time is pass 24
+		if(inHours >=24)
+			inHours = inHours - 24;
 
-		}
 	}
+	
+	
+	
+	
+//	ServletOutputStream out = response.getOutputStream();
+//	String alarm = request.getParameter("alarm");
+//	response.setContentType("text/html");
+//	out.println("Address is: " + request.getAttribute("Address"));
+	
+	out.println(alarmJson);
+	out.close();
+	
+    //request.getRequestDispatcher("/AlarmResult.jsp").forward(request, response);
+    
+} catch (FitbitAPIException e) {
+	throw new ServletException("Exception during getting user info", e);
+
+}
+}
 	
 }

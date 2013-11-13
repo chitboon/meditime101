@@ -6,7 +6,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Set Alarm</title>
 
-
 </head>
 
 <body>
@@ -18,21 +17,25 @@
 <tr>
 <td>Time : </td>
 <td><input type ='textbox' name="alarmTime" id="alarmTime">
-<select name="abc">
-<option value ="am" name="period">AM</option>
-<option value ="pm" name ="period" >PM</option>
-</select>
-<% request.setAttribute("period", request.getParameter("period")); %>
-<% request.setAttribute("alarm",request.getParameter("alarmTime")); %>
 </td>
 </tr>
 <tr>
-<td>Occuring : </td>
-<td><input type ="radio" name="recurring" value="once">once
-<input type ="radio" name="recurring" value="recurring">recurring</td>
-<% request.setAttribute("occuring",request.getParameter("recurring")); %>
+<td>Duration :
+</td>
+<td>
+<select id="duration" name="duration">
+<option value ="0">Once per Day</option>
+<option value ="6">Every 6 hours</option>
+<option value ="8">Every 8 hours</option>
+<option value ="12">Every 12 hours</option>
+
+</select>
+</td>
 </tr>
+
 </table>
+
+
 <button>Cancel</button>
 <button>Save</button>
 

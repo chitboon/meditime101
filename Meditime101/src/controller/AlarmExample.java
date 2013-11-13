@@ -88,11 +88,13 @@ public class AlarmExample extends HttpServlet {
 			
 			List<Device> deviceList = apiClientService.getClient().getDevices(localUser);
 			Device dev = deviceList.get(0);
-			String alarmJson = apiClientService.getClient().addAlarms(localUser, dev.getId());
+			
+			//String alarmJson = apiClientService.getClient().addAlarms(localUser, dev.getId(), request);
 			
 			PrintWriter out = response.getWriter();
-			out.println(alarmJson);
-			out.close();		
+			//out.println(alarmJson);
+			//out.close();
+			
 		} catch (FitbitAPIException e) {
 			throw new ServletException("Exception during getting user info", e);
 
