@@ -1,9 +1,34 @@
 <%--@elvariable id="userInfo" type="com.fitbit.api.common.model.user.UserInfo"--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<head><title>User Page with stored tokens</title></head>
+<head><title>Personal Information</title>
+
+        <link rel="stylesheet" href="../css/bootstrap.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="../css/sbootstrap-theme.css" type="text/css" media="screen" />
+        <script src="../js/bootstrap.js"></script>
+</head>
 <body>
-<table>
+<div class="container">
+
+      <div class="masthead">
+        <h3 class="text-muted">MediTime</h3>
+        <ul class="nav nav-justified">
+          <li class="active"><a href="index.html">Home</a></li>
+          <li><a href="fitbitApiAuthExample">Personal Information</a></li>
+          <li><a href="#">Alarm</a></li>
+        </ul>
+      </div>
+
+      <!-- Jumbotron -->
+      <div class="jumbotron">
+        <h1>Set Alarm</h1>
+        <p class="lead">By providing the time and interval between the medicines, it would result in vibrate on the fitbit flex which would then be worn by the elderly to remind them to eat their medicine. </p>
+        <!-- <p><a class="btn btn-lg btn-success" href="#" role="button">Get started today</a></p> -->
+      </div>
+
+      <!-- Example row of columns -->
+
+<table class="table table-striped">
     <tr>
         <td>Full Name:</td>
         <td>${userInfo.fullName}</td>
@@ -44,43 +69,17 @@
         <td>Offset From UTC (Millis):</td>
         <td>${userInfo.offsetFromUTCMillis}</td>
     </tr>    
-        <tr>
-        <td>Vibe :</td>
-        <td> <%= request.getAttribute("vibe") %></td>
-    </tr>     
-        <tr>
-        <td>deleted :</td>
-        <td> <%= request.getAttribute("deleted") %></td>
-    </tr>  
-        <tr>
-        <td>enabled :</td>
-        <td> <%= request.getAttribute("enabled") %></td>
-    </tr>   
-        <tr>
-        <td>recurring :</td>
-        <td> <%= request.getAttribute("recurring") %></td>
-    </tr>    
-        <tr>
-        <td>syncedToDevice :</td>
-        <td> <%= request.getAttribute("syncedToDevice") %></td>
-    </tr> 
-       <tr>
-        <td>time :</td>
-        <td> <%= request.getAttribute("time") %></td>
-    </tr> 
-    <tr>
-        <td>alarmId :</td>
-        <td> <%= request.getAttribute("alarmId") %></td>
-    </tr>
-       <tr>
-        <td>snoozeCount :</td>
-        <td> <%= request.getAttribute("snoozeCount") %></td>
-    </tr>
-       <tr>
-        <td>snoozeLength :</td>
-        <td> <%= request.getAttribute("snoozeLength") %></td>
-    </tr>
 </table>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    
+      <!-- Site footer -->
+      <div class="footer">
+        <p>&copy; Nanyang Polytechnic FYPJ 2013</p>
+      </div>
+
+    </div> <!-- /container -->
+
 
 </body>
 </html>

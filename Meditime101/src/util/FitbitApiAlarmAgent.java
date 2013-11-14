@@ -57,9 +57,7 @@ public class FitbitApiAlarmAgent extends FitbitApiClientAgent {
 			throws FitbitAPIException {
 		setAccessToken(localUser);
 		// Example: GET /1/user/-/devices/tracker/456665/alarms.json
-		String url = APIUtil.contextualizeUrl(getApiBaseUrl(), getApiVersion(),
-				"/user/-/devices/tracker/" + deviceId + "/alarms",
-				APIFormat.JSON);
+		String url = APIUtil.contextualizeUrl(getApiBaseUrl(), getApiVersion(), "/user/-/devices/tracker/" + deviceId + "/alarms", APIFormat.JSON);
 		Response response = httpGet(url, true);
 		throwExceptionIfError(response);
 		try {
@@ -110,5 +108,16 @@ public class FitbitApiAlarmAgent extends FitbitApiClientAgent {
 		}
 		return res.asString();
 	}
+	
+    public void deleteAlarm(LocalUserDetail localUser, String deviceId, String alarmId) throws FitbitAPIException {
+        setAccessToken(localUser);
+        // Example: DELETE /1/user/-/devices/tracker/55777/alarms/123.json
+        String url = APIUtil.contextualizeUrl(getApiBaseUrl(), getApiVersion(),  "/user/-/devices/tracker/" + deviceId + "/alarms/" + alarmId, APIFormat.JSON);
+        try {
+            httpDelete(url, true);
+        } catch (Exception e) {
+            throw new FitbitAPIException("Error deleting Alarm Id:  " + e, e);
+        }
+    }
 
 }

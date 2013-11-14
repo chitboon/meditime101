@@ -24,7 +24,11 @@
         <td>weekDays :</td>
         <td> <%= request.getAttribute("weekDays") %></td>
     </tr>    
-
+<tr>
+<td>
+<input type="image" src="file:///Users/Guest/Desktop/ + <%= request.getAttribute("imageUrl") %>">
+</td>
+</tr>
 </table>
 </body>
 </html>
