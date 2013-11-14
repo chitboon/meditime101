@@ -17,6 +17,8 @@ import org.json.JSONObject;
 import org.json.JSONString;
 
 import util.FitbitApiAlarmAgent;
+import model.AlarmData;
+import model.AlarmDataAO;
 import model.ResourceCredentials;
 import model.ResourceCredentialsAO;
 
@@ -93,13 +95,18 @@ public class User extends HttpServlet {
 			Device dev = deviceList.get(0);
 			
 			
-//			PrintWriter out =response.getWriter();
-//			out.print(dev.getId());
-//			out.println();
+			
+			List<Alarm> alarmJson = apiClientService.getClient().getAlarms(localUser, dev.getId());
+//			for (int i=0; i < alarmJson.size(); i++) {
+//				PrintWriter out =response.getWriter();
+//				out.print(i);
+//				out.println();
+//				}
+			
+			AlarmDataAO adAO = new AlarmDataAO();
+			List<AlarmData> alarmList = adAO.getAlarmData();
 			
 			
-			String alarmJson = apiClientService.getClient().getAlarms(localUser, dev.getId());
-		
 			
 			//break up json string
         	JSONObject jsonObject = new JSONObject(alarmJson);

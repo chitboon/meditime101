@@ -31,7 +31,10 @@ import com.fitbit.api.common.model.foods.FoodFormType;
 import com.fitbit.api.common.model.foods.FoodLog;
 import com.fitbit.api.common.model.foods.NutritionalValuesEntry;
 import com.fitbit.api.common.service.FitbitApiService;
+import com.fitbit.api.model.APICollectionType;
 import com.fitbit.api.model.APIFormat;
+import com.fitbit.api.model.ApiCollectionProperty;
+import com.fitbit.api.model.FitbitUser;
 
 import controller.Alarm;
 
@@ -53,23 +56,37 @@ public class FitbitApiAlarmAgent extends FitbitApiClientAgent {
 		// TODO Auto-generated constructor stub
 	}
 
-	public String getAlarms(LocalUserDetail localUser, String deviceId)
-			throws FitbitAPIException {
-		setAccessToken(localUser);
-		// Example: GET /1/user/-/devices/tracker/456665/alarms.json
-		String url = APIUtil.contextualizeUrl(getApiBaseUrl(), getApiVersion(), "/user/-/devices/tracker/" + deviceId + "/alarms", APIFormat.JSON);
-		Response response = httpGet(url, true);
-		throwExceptionIfError(response);
-		try {
-			
-			return response.asJSONObject().toString();
-			
-		} catch (JSONException e) {
-			throw new FitbitAPIException(
-					"Error parsing json response to list of Scale : ", e);
-		}
-	}
-
+//	public String getAlarms(LocalUserDetail localUser, String deviceId)
+//			throws FitbitAPIException {
+//		setAccessToken(localUser);
+//		// Example: GET /1/user/-/devices/tracker/456665/alarms.json
+//		String url = APIUtil.contextualizeUrl(getApiBaseUrl(), getApiVersion(), "/user/-/devices/tracker/" + deviceId + "/alarms", APIFormat.JSON);
+//		Response response = httpGet(url, true);
+//		throwExceptionIfError(response);
+//		try {
+//			
+//			return response.asJSONObject().toString();
+//			
+//		} catch (JSONException e) {
+//			throw new FitbitAPIException(
+//					"Error parsing json response to list of Scale : ", e);
+//		}
+//	}
+    public Response getCollectionResponseForAlarm(LocalUserDetail localUser, String deviceId) throws FitbitAPIException {
+        setAccessToken(localUser);
+        // Example: GET /1/user/-/devices/tracker/456665/alarms.json
+        String url = APIUtil.contextualizeUrl(getApiBaseUrl(), getApiVersion(), "/user/-/devices/tracker/" + deviceId + "/alarms", APIFormat.JSON);
+        Response res = httpGet(url, true);
+        throwExceptionIfError(res);
+        return res;
+    }
+	
+    public List<Alarm> getAlarms(LocalUserDetail localUser,String deviceId) throws FitbitAPIException {
+        // Example: GET /1/user/-/devices/tracker/456665/alarms.json
+    	Response res = getCollectionResponseForAlarm(localUser, deviceId);
+        return Alarm.constructAlarmListFromArrayResponse(res);
+    }
+	
 	public void addAlarms(LocalUserDetail localUser, String deviceId,
 			String time, boolean enabled, boolean recurring, String[] weekDays)
 			throws FitbitAPIException {

@@ -7,6 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.fitbit.api.FitbitAPIException;
+import com.fitbit.api.client.http.Response;
+import com.fitbit.api.common.model.foods.Food;
 import com.fitbit.api.common.model.foods.FoodUnit;
 import com.fitbit.api.common.model.user.UserInfo;
 
@@ -22,7 +25,7 @@ public class Alarm {
 	private final boolean syncedToDevice;
 	private final String time;
 	private final String vibe;
-	private final String [] weekDays;
+	//private final String [] weekDays;
 	
 //    public Alarm(JSONObject json) throws JSONException {
 //        this(json, true);
@@ -39,7 +42,7 @@ public class Alarm {
        this.syncedToDevice = syncedToDevice;
        this.time = time;
        this.vibe = vibe;
-       this.weekDays = weekDays;
+      // this.weekDays = weekDays;
     }
     
     public Alarm(JSONObject json) throws JSONException {
@@ -53,7 +56,7 @@ public class Alarm {
         syncedToDevice = json.getBoolean("syncedToDevice");
         time = json.getString("time");
         vibe = json.getString("vibe");
-        weekDays = jsonArrayToAlarmArray(json.getJSONArray("weekDays"));
+       // weekDays = jsonArrayToAlarmArray(json.getJSONArray("weekDays"));
     }
 
 //	public Alarm(JSONObject jsonObject, boolean wrapped) throws JSONException {
@@ -71,23 +74,42 @@ public class Alarm {
 //        weekDays = jsonArrayToAlarmArray(jsonObject.getJSONArray("weekDays"));
 //    }
 
-    public static List<Alarm> alarmArray(JSONArray array) throws JSONException {
-        List<Alarm> AlarmList = new ArrayList<Alarm>(array.length());
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject jsonAlarm = array.getJSONObject(i);
-            AlarmList.add(new Alarm(jsonAlarm));
+//    public static List<Alarm> alarmArray(JSONArray array) throws JSONException {
+//        List<Alarm> AlarmList = new ArrayList<Alarm>(array.length());
+//        for (int i = 0; i < array.length(); i++) {
+//            JSONObject jsonAlarm = array.getJSONObject(i);
+//            AlarmList.add(new Alarm(jsonAlarm));
+//        }
+//        return AlarmList;
+//    }
+//
+//    static String[] jsonArrayToAlarmArray(JSONArray array) throws JSONException {
+//    	String[] weekDays = new String[array.length()];
+//        for (int i = 0; i < array.length(); i++) {
+//            weekDays[i] = array.getString(i);
+//        }
+//        return weekDays;
+//    }
+
+    public static List<Alarm> constructAlarmListFromArrayResponse(Response res) throws FitbitAPIException {
+        try {
+            return jsonArrayToAlarmList(res.asJSONArray());
+        } catch (JSONException e) {
+            throw new FitbitAPIException(e.getMessage() + ':' + res.asString(), e);
         }
-        return AlarmList;
     }
 
-    static String[] jsonArrayToAlarmArray(JSONArray array) throws JSONException {
-    	String[] weekDays = new String[array.length()];
+    static List<Alarm> jsonArrayToAlarmList(JSONArray array) throws JSONException {
+        List<Alarm> alarmList = new ArrayList<Alarm>(array.length());
         for (int i = 0; i < array.length(); i++) {
-            weekDays[i] = array.getString(i);
+            JSONObject alarm = array.getJSONObject(i);
+            alarmList.add(new Alarm(alarm));
         }
-        return weekDays;
+        return alarmList;
     }
-
+    
+    
+    
 	public String getAlarmId() {
 		return alarmId;
 	}
@@ -118,9 +140,9 @@ public class Alarm {
 	public String getVibe() {
 		return vibe;
 	}
-	public String[] getWeekDays() {
-		return weekDays;
-	}
+//	public String[] getWeekDays() {
+//		return weekDays;
+//	}
 	
 	
 }
