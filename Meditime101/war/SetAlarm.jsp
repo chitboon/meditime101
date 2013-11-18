@@ -8,7 +8,7 @@
 
         <link rel="stylesheet" href="../css/bootstrap.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="../css/sbootstrap-theme.css" type="text/css" media="screen" />
-        <script src="../css/bootstrap.js"></script>
+        <script src="../js/bootstrap.js"></script>
 
 </head>
 
@@ -22,6 +22,7 @@
           <li class="active"><a href="index.html">Home</a></li>
           <li><a href="fitbitApiAuthExample">Personal Information</a></li>
           <li><a href="#">Alarm</a></li>
+          <li><a href="medicine.jsp">Medicine</a></li>
         </ul>
       </div>
 

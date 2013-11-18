@@ -97,18 +97,22 @@ public class User extends HttpServlet {
 			
 			
 			List<Alarm> alarmJson = apiClientService.getClient().getAlarms(localUser, dev.getId());
+			for(Alarm a : alarmJson)
+			{
+				PrintWriter out = response.getWriter();
+				out.println(a);
+			}
 //			for (int i=0; i < alarmJson.size(); i++) {
 //				PrintWriter out =response.getWriter();
 //				out.print(i);
 //				out.println();
 //				}
 			
-			AlarmDataAO adAO = new AlarmDataAO();
-			List<AlarmData> alarmList = adAO.getAlarmData();
+//			AlarmDataAO adAO = new AlarmDataAO();
+//			List<AlarmData> alarmList = adAO.getAlarmData();
 			
-			
-			
-			//break up json string
+
+//			//break up json string
         	JSONObject jsonObject = new JSONObject(alarmJson);
 
         	JSONArray alarmJsonArray = jsonObject.getJSONArray("trackerAlarms");
@@ -245,17 +249,6 @@ request.setAttribute("imageUrl", imageUrl);
 	}
 	
 	
-	
-	
-//	ServletOutputStream out = response.getOutputStream();
-//	String alarm = request.getParameter("alarm");
-//	response.setContentType("text/html");
-//	out.println("Address is: " + request.getAttribute("Address"));
-	
-//	out.println(alarmJson);
-//	out.println(imageUrl);
-//	out.close();
-	
     request.getRequestDispatcher("/AlarmResult.jsp").forward(request, response);
     
 } catch (FitbitAPIException e) {
@@ -292,8 +285,11 @@ request.setAttribute("imageUrl", imageUrl);
 			
 			String alarmId = request.getParameter("alarmId");
 			
-			request.getRequestDispatcher("/getAlarm.jsp").forward(request, response);
+			PrintWriter out = response.getWriter();
+			out.print(alarmId);
+			//apiClientService.getClient().deleteAlarm(localUser,dev.getId(),alarmId);
 			
+			 //request.getRequestDispatcher("/getAlarm.jsp").forward(request, response);
 			
 		} catch (FitbitAPIException e) {
 			throw new ServletException("Exception during getting user info", e);

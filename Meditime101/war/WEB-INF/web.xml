@@ -51,6 +51,16 @@
     <servlet-mapping>
         <servlet-name>AlarmExample</servlet-name>
         <url-pattern>/alarmExample</url-pattern>
+    </servlet-mapping> 
+       
+       <servlet>
+        <servlet-name>medicineServlet</servlet-name>
+        <servlet-class>controller.medicineServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>medicineServlet</servlet-name>
+        <url-pattern>/medicine</url-pattern>
     </servlet-mapping>    
     
 
