@@ -16,13 +16,14 @@
           <li class="active"><a href="index.html">Home</a></li>
           <li><a href="fitbitApiAuthExample">Personal Information</a></li>
           <li><a href="#">Alarm</a></li>
+          <li><a href="medicine.jsp">Medicine</a></li>
         </ul>
       </div>
 
       <!-- Jumbotron -->
       <div class="jumbotron">
-        <h1>Set Alarm</h1>
-        <p class="lead">By providing the time and interval between the medicines, it would result in vibrate on the fitbit flex which would then be worn by the elderly to remind them to eat their medicine. </p>
+        <h1>Personal Information</h1>
+        <p class="lead">This would be the information regarding the elderly and would allow the caregiver to know about the information when needed.</p>
         <!-- <p><a class="btn btn-lg btn-success" href="#" role="button">Get started today</a></p> -->
       </div>
 
@@ -36,10 +37,6 @@
     <tr>
         <td>Display Name:</td>
         <td>${userInfo.displayName}</td>
-    </tr>
-    <tr>
-        <td>Nickname:</td>
-        <td>${userInfo.nickname}</td>
     </tr>
     <tr>
         <td>Gender:</td>
@@ -61,14 +58,6 @@
         <td>Country:</td>
         <td>${userInfo.country}</td>
     </tr>
-    <tr>
-        <td>Timezone:</td>
-        <td>${userInfo.timezone}</td>
-    </tr>
-    <tr>
-        <td>Offset From UTC (Millis):</td>
-        <td>${userInfo.offsetFromUTCMillis}</td>
-    </tr>    
 </table>
 
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>

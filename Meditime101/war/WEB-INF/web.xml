@@ -62,6 +62,23 @@
         <servlet-name>medicineServlet</servlet-name>
         <url-pattern>/medicine</url-pattern>
     </servlet-mapping>    
-    
+          <servlet>
+        <servlet-name>MedicineHistory</servlet-name>
+        <servlet-class>controller.MedicineHistory</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MedicineHistory</servlet-name>
+        <url-pattern>/medicineHistory</url-pattern>
+    </servlet-mapping>  
+              <servlet>
+        <servlet-name>DeleteAlarm</servlet-name>
+        <servlet-class>controller.DeleteAlarm</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteAlarm</servlet-name>
+        <url-pattern>/deleteAlarm</url-pattern>
+    </servlet-mapping>  
 
 </web-app>

@@ -15,13 +15,13 @@ import com.fitbit.api.common.model.user.UserInfo;
 
 public class Alarm {
 
-	private final String alarmId;
+	private final long alarmId;
 	private final boolean deleted;
 	private final boolean enabled;
-	private final String label;
+//	private final String label;
 	private final boolean recurring;
-	private final String snoozeCount;
-	private final String snoozeLength;
+	private final int snoozeCount;
+	private final int snoozeLength;
 	private final boolean syncedToDevice;
 	private final String time;
 	private final String vibe;
@@ -31,11 +31,10 @@ public class Alarm {
 //        this(json, true);
 //    }
     
-    public Alarm(String alarmId, boolean deleted, boolean enabled, String label, boolean recurring, String snoozeCount, String snoozeLength, boolean syncedToDevice, String time, String vibe, String [] weekDays) {
+    public Alarm(long alarmId, boolean deleted, boolean enabled, boolean recurring, int snoozeCount, int snoozeLength, boolean syncedToDevice, String time, String vibe, String [] weekDays) {
        this.alarmId = alarmId;
        this.deleted = deleted;
        this.enabled = enabled;
-       this.label = label; 
        this.recurring = recurring;
        this.snoozeCount = snoozeCount;
        this.snoozeLength = snoozeLength;
@@ -46,13 +45,12 @@ public class Alarm {
     }
     
     public Alarm(JSONObject json) throws JSONException {
-    	alarmId = json.getString("alarmId");
+    	alarmId = json.getLong("alarmId");
     	deleted = json.getBoolean("deleted");
     	enabled = json.getBoolean("enabled");
-        label = json.getString("label");
         recurring = json.getBoolean("recurring");
-        snoozeCount = json.getString("snoozeCount");
-        snoozeLength = json.getString("snoozeLength");
+        snoozeCount = json.getInt("snoozeCount");
+        snoozeLength = json.getInt("snoozeLength");
         syncedToDevice = json.getBoolean("syncedToDevice");
         time = json.getString("time");
         vibe = json.getString("vibe");
@@ -93,7 +91,7 @@ public class Alarm {
 
     public static List<Alarm> constructAlarmListFromArrayResponse(Response res) throws FitbitAPIException {
         try {
-            return jsonArrayToAlarmList(res.asJSONArray());
+            return jsonArrayToAlarmList(res.asJSONObject().getJSONArray("trackerAlarms"));
         } catch (JSONException e) {
             throw new FitbitAPIException(e.getMessage() + ':' + res.asString(), e);
         }
@@ -110,7 +108,7 @@ public class Alarm {
     
     
     
-	public String getAlarmId() {
+	public long getAlarmId() {
 		return alarmId;
 	}
 	public boolean isDeleted() {
@@ -119,16 +117,13 @@ public class Alarm {
 	public boolean isEnabled() {
 		return enabled;
 	}
-	public String getLabel() {
-		return label;
-	}
 	public boolean isRecurring() {
 		return recurring;
 	}
-	public String getSnoozeCount() {
+	public int getSnoozeCount() {
 		return snoozeCount;
 	}
-	public String getSnoozeLength() {
+	public int getSnoozeLength() {
 		return snoozeLength;
 	}
 	public boolean isSyncedToDevice() {

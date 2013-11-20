@@ -92,10 +92,6 @@ public class FitbitApiAlarmAgent extends FitbitApiClientAgent {
 			throws FitbitAPIException {
 	}
 
-	/*
-	 * demo method to show how to add Alarm
-	 */
-
 	public String addAlarms(LocalUserDetail localUser, String deviceId, HttpServletRequest request, String alarm)
 			throws FitbitAPIException {
 		setAccessToken(localUser);
@@ -104,8 +100,7 @@ public class FitbitApiAlarmAgent extends FitbitApiClientAgent {
 		String url = APIUtil.contextualizeUrl(getApiBaseUrl(), getApiVersion(), "/user/-/devices/tracker/" + deviceId + "/alarms",APIFormat.JSON);
 		
 		
-		List<PostParameter> params = new ArrayList<PostParameter>();
-		
+		List<PostParameter> params = new ArrayList<PostParameter>();	
 		
 		params.add(new PostParameter("time",alarm));
 		params.add(new PostParameter("enabled", "true"));

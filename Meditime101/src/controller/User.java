@@ -19,6 +19,8 @@ import org.json.JSONString;
 import util.FitbitApiAlarmAgent;
 import model.AlarmData;
 import model.AlarmDataAO;
+import model.MedicineData;
+import model.MedicineDataAO;
 import model.ResourceCredentials;
 import model.ResourceCredentialsAO;
 
@@ -97,57 +99,16 @@ public class User extends HttpServlet {
 			
 			
 			List<Alarm> alarmJson = apiClientService.getClient().getAlarms(localUser, dev.getId());
-			for(Alarm a : alarmJson)
-			{
-				PrintWriter out = response.getWriter();
-				out.println(a);
-			}
-//			for (int i=0; i < alarmJson.size(); i++) {
-//				PrintWriter out =response.getWriter();
-//				out.print(i);
-//				out.println();
-//				}
-			
-//			AlarmDataAO adAO = new AlarmDataAO();
-//			List<AlarmData> alarmList = adAO.getAlarmData();
-			
 
-//			//break up json string
-        	JSONObject jsonObject = new JSONObject(alarmJson);
-
-        	JSONArray alarmJsonArray = jsonObject.getJSONArray("trackerAlarms");
-        	
-        	
-        	for (int i = 0; i < alarmJsonArray.length(); i++) {
-
-                JSONObject testJsonObject = alarmJsonArray.getJSONObject(i);
-                
-                long alarmId = testJsonObject.getLong("alarmId");
-                boolean deleted = testJsonObject.getBoolean("deleted");
-                boolean enabled = testJsonObject.getBoolean("enabled");
-                boolean recurring = testJsonObject.getBoolean("recurring");
-                int snoozeCount = testJsonObject.getInt("snoozeCount");
-                int snoozeLength = testJsonObject.getInt("snoozeLength");
-                boolean syncedToDevice = testJsonObject.getBoolean("syncedToDevice");
-                String time = testJsonObject.getString("time");
-                String vibe = testJsonObject.getString("vibe");
-
-                request.setAttribute("vibe", vibe);
-                request.setAttribute("deleted", deleted);
-                request.setAttribute("enabled", enabled);
-                request.setAttribute("recurring", recurring);
-                request.setAttribute("syncedToDevice", syncedToDevice);
-                request.setAttribute("time", time);
-                request.setAttribute("alarmId", alarmId);
-                request.setAttribute("snoozeCount", snoozeCount);
-                request.setAttribute("snoozeLength", snoozeLength);
-                
-        	}
+				request.setAttribute("alarms", alarmJson);
+				
+				MedicineDataAO md = new MedicineDataAO();
+				
+				List<MedicineData> medicineJson = md.getMedicineData();
 			
-			request.setAttribute("userInfo", userInfo);
-			request.setAttribute("alarmJson", alarmJson);
+				request.setAttribute("medicine", medicineJson);
 			
-			//request.getRequestDispatcher("/getAlarm.jsp").forward(request, response);
+			request.getRequestDispatcher("/getAlarm.jsp").forward(request, response);
 			
 			
 		} catch (FitbitAPIException e) {
@@ -185,13 +146,6 @@ try {
 	
 	String alarm = request.getParameter("alarmTime");
 	
-String imageUrl = request.getParameter("inputFile");
-request.setAttribute("imageUrl", imageUrl);
-	
-	
-//	URL imageUrl = new URL(request.getParameter("inputFile"));
-//    request.setAttribute("imageUrl", imageUrl);
-	
 	String alarm1 = null;
 	
 	//substring the first 2 digit for calculation
@@ -201,18 +155,46 @@ request.setAttribute("imageUrl", imageUrl);
 	
 	//check the substring
 	PrintWriter out =response.getWriter();
-	out.print("stHours" + stHours + "\n");
-	out.println();
-	out.print("stMin" + stMin + "\n");
 		
-	int duration = Integer.parseInt(request.getParameter("duration"));
-	int times;
+	int times = 0;
+	String duration1 = request.getParameter("duration1").trim();
+	int intDuration = 0;
+	int dayToFinish = 0;
+	String name = request.getParameter("name");
+	int tablet = Integer.parseInt(request.getParameter("tablet"));
+	String date = request.getParameter("date");
+	
 	
 	//check how many alarms will there be
-	if(duration != 0)
-		times = (24/duration);
-	else
-		times=1;
+	if(duration1.equals("once"))
+	{
+		intDuration = 1;	
+		dayToFinish = tablet/intDuration;
+		times = 1;
+	}
+	
+	else if(duration1.equals("twice"))
+	{
+		intDuration = 2;	
+		dayToFinish = tablet/intDuration;
+		times = 2;
+		intDuration = 12;
+	}
+	else if (duration1.equals("thrice"))
+	{
+		intDuration = 3;
+		dayToFinish = tablet/intDuration;
+		times = 3;
+		intDuration = 8;
+	}
+	else if(duration1.equals("thrice"))
+	{
+		intDuration = 4;
+		dayToFinish = tablet/intDuration;
+		times = 4;
+		intDuration = 6;
+	}
+	
 	
 	//Declare the array
 	String[] alarmArray = new String[times];
@@ -241,15 +223,272 @@ request.setAttribute("imageUrl", imageUrl);
 		alarmJson = apiClientService.getClient().addAlarms(localUser, dev.getId(), request, alarmArray[i]);
 		
 		//Add the hours into the original time
-		inHours +=duration;
+		inHours +=intDuration;
 		//check if the time is pass 24
 		if(inHours >=24)
 			inHours = inHours - 24;
 
 	}
 	
+	//ALARM
+	medicineBean med = new medicineBean();
+	med.setDate(date);
+	med.setDuration(duration1);
+	med.setName(name);
+	med.setTablet(tablet);
 	
-    request.getRequestDispatcher("/AlarmResult.jsp").forward(request, response);
+	String stDay = date.substring(0, 2);
+	String stMonth = date.substring(3, 5);
+	String stYear = date.substring(6, 10);
+	
+	
+	int intDay = Integer.parseInt(stDay);
+	int intMonth = Integer.parseInt(stMonth);
+	int intYear = Integer.parseInt(stYear);
+	
+	
+	int finishDate = intDay + dayToFinish;
+	String stFinishDate;
+	
+	Random randomNumber = new Random();
+	long randomInt = randomNumber.nextInt(10000000);
+	
+//	MedicineData medDate = new MedicineData();
+//	
+//	medDate.setDuration(duration);
+//	medDate.setName(name);
+//	medDate.setStartDate(date);
+//	medDate.setTablet(tablet);
+//	
+
+	 MedicineData md = new MedicineData();
+     MedicineDataAO ao1 = new MedicineDataAO();
+
+
+     
+	if(intMonth == 1)
+	{
+		if(finishDate>31)
+		{
+		finishDate = finishDate - 31;
+		intDay = finishDate;
+		intMonth++;
+		
+		request.setAttribute("intDay", intDay);
+		request.setAttribute("intMonth", intMonth);
+		//medDate.setEndDate(Integer.toString(intDay) + "/" + Integer.toString(intMonth) + "/" +  stYear);			
+	
+		out.print(Integer.toString(intDay) + "/" + Integer.toString(intMonth) + "/" +  stYear);
+		}
+	}
+	else if (intMonth == 2)
+	{
+		if(finishDate>28)
+		{
+		finishDate = finishDate - 28;
+		intDay = finishDate;
+		intMonth++;
+		
+		request.setAttribute("intDay", intDay);
+		request.setAttribute("intMonth", intMonth);
+		//medDate.setEndDate(Integer.toString(intDay) + "/" + Integer.toString(intMonth) + "/" +  stYear);
+		}
+	}
+	else if (intMonth == 3)
+	{
+		if(finishDate>31)
+		{
+		finishDate = finishDate - 31;
+		intDay = finishDate;
+		intMonth++;
+		
+		request.setAttribute("intDay", intDay);
+		request.setAttribute("intMonth", intMonth);
+		//medDate.setEndDate(Integer.toString(intDay) + "/" + Integer.toString(intMonth) + "/" +  stYear);
+		}
+	}
+	else if (intMonth == 4)
+	{
+		if(finishDate>30)
+		{
+		finishDate = finishDate - 30;
+		intDay = finishDate;
+		intMonth++;
+		
+		request.setAttribute("intDay", intDay);
+		request.setAttribute("intMonth", intMonth);
+		//medDate.setEndDate(Integer.toString(intDay) + "/" + Integer.toString(intMonth) + "/" +  stYear);
+		}
+	}
+	else if (intMonth == 5)
+	{
+		if(finishDate>31)
+		{
+		finishDate = finishDate - 31;
+		intDay = finishDate;
+		intMonth++;
+		
+		request.setAttribute("intDay", intDay);
+		request.setAttribute("intMonth", intMonth);
+		//medDate.setEndDate(Integer.toString(intDay) + "/" + Integer.toString(intMonth) + "/" +  stYear);
+		}
+	}
+	else if (intMonth == 6)
+	{
+		if(finishDate>30)
+		{
+		finishDate = finishDate - 30;
+		intDay = finishDate;
+		intMonth++;
+		
+		request.setAttribute("intDay", intDay);
+		request.setAttribute("intMonth", intMonth);
+		//medDate.setEndDate(Integer.toString(intDay) + "/" + Integer.toString(intMonth) + "/" +  stYear);
+		}
+	}
+	else if (intMonth == 7)
+	{
+		if(finishDate>31)
+		{
+		finishDate = finishDate - 31;
+		intDay = finishDate;
+		intMonth++;
+		
+		request.setAttribute("intDay", intDay);
+		request.setAttribute("intMonth", intMonth);
+		//medDate.setEndDate(Integer.toString(intDay) + "/" + Integer.toString(intMonth) + "/" +  stYear);
+		}
+	}
+	else if (intMonth == 8)
+	{
+		if(finishDate>31)
+		{
+		finishDate = finishDate - 31;
+		intDay = finishDate;
+		intMonth++;
+		
+		request.setAttribute("intDay", intDay);
+		request.setAttribute("intMonth", intMonth);
+		//medDate.setEndDate(Integer.toString(intDay) + "/" + Integer.toString(intMonth) + "/" +  stYear);
+		}
+	}
+	else if (intMonth == 9)
+	{
+		if(finishDate>30)
+		{
+		finishDate = finishDate - 30;
+		intDay = finishDate;
+		intMonth++;
+		
+		request.setAttribute("intDay", intDay);
+		request.setAttribute("intMonth", intMonth);
+		//medDate.setEndDate(Integer.toString(intDay) + "/" + Integer.toString(intMonth) + "/" +  stYear);
+		}
+	}
+	else if (intMonth == 10)
+	{
+		if(finishDate>31)
+		{
+		finishDate = finishDate - 31;
+		intDay = finishDate;
+		intMonth++;
+		
+		request.setAttribute("intDay", intDay);
+		request.setAttribute("intMonth", intMonth);
+		//medDate.setEndDate(Integer.toString(intDay) + "/" + Integer.toString(intMonth) + "/" +  stYear);
+		}
+	}
+	else if (intMonth == 11)
+	{
+		if(finishDate>61)
+		{
+			finishDate = finishDate - 61;
+			
+			intMonth = 1;
+			stYear = "2014";
+			
+			if(finishDate <10)
+				stFinishDate = "0" + finishDate;
+			else
+				stFinishDate = Integer.toString(finishDate);
+					
+			
+			request.setAttribute("intDay", finishDate);
+			request.setAttribute("intMonth", intMonth);
+			
+			ao1.add(randomInt, name, date, stFinishDate + "/" + Integer.toString(intMonth) + "/" +  stYear, duration1, tablet);
+	         request.setAttribute("id",randomInt);
+	         request.setAttribute("name",name);
+	         request.setAttribute("startDate",date);
+	         request.setAttribute("endDate",stFinishDate + "/" + Integer.toString(intMonth) + "/" +  stYear);
+	         request.setAttribute("duration",duration1);
+	         request.setAttribute("tablet",tablet);
+			
+		}
+		
+		else if(finishDate>30)
+		{
+		finishDate = finishDate - 30;
+
+		intMonth++;
+		
+		if(finishDate <10)
+			stFinishDate = "0" + finishDate;
+		else
+			stFinishDate = Integer.toString(finishDate);
+				
+		
+		request.setAttribute("intDay", finishDate);
+		request.setAttribute("intMonth", intMonth);
+		
+		ao1.add(randomInt, name, date, stFinishDate + "/" + Integer.toString(intMonth) + "/" +  stYear, duration1, tablet);
+         request.setAttribute("id",randomInt);
+         request.setAttribute("name",name);
+         request.setAttribute("startDate",date);
+         request.setAttribute("endDate",stFinishDate + "/" + Integer.toString(intMonth) + "/" +  stYear);
+         request.setAttribute("duration",duration1);
+         request.setAttribute("tablet",tablet);
+		
+		
+		//out.print(Integer.toString(finishDate) + "/" + Integer.toString(intMonth) + "/" +  stYear);
+		}
+		else
+		{
+			if(finishDate <10)
+				stFinishDate = "0" + finishDate;
+			else
+				stFinishDate = Integer.toString(finishDate);
+					
+			request.setAttribute("intDay", finishDate);
+			request.setAttribute("intMonth", intMonth);
+			ao1.add(randomInt, name, date, stFinishDate + "/" + Integer.toString(intMonth) + "/" +  stYear, duration1, tablet);
+	         request.setAttribute("id",randomInt);
+	         request.setAttribute("name",name);
+	         request.setAttribute("startDate",date);
+	         request.setAttribute("endDate",stFinishDate + "/" + Integer.toString(intMonth) + "/" +  stYear);
+	         request.setAttribute("duration",duration1);
+	         request.setAttribute("tablet",tablet);
+			
+	 		//out.print(Integer.toString(finishDate) + "/" + Integer.toString(intMonth) + "/" +  stYear);
+		}
+	}
+	else if (intMonth == 12)
+	{
+		if(finishDate>31)
+		{
+		finishDate = finishDate - 31;
+		intDay = finishDate;
+		intMonth++;
+		
+		request.setAttribute("intDay", intDay);
+		request.setAttribute("intMonth", intMonth);
+		//medDate.setEndDate(Integer.toString(intDay) + "/" + Integer.toString(intMonth) + "/" +  stYear);
+		}
+	}
+	
+	
+	
+   request.getRequestDispatcher("/index.html").forward(request, response);
     
 } catch (FitbitAPIException e) {
 	throw new ServletException("Exception during getting user info", e);
@@ -257,43 +496,46 @@ request.setAttribute("imageUrl", imageUrl);
 }
 }
 	
-	protected void doDelete(HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ServletException {
-		FitbitAPIClientService<FitbitApiAlarmAgent> apiClientService = new FitbitAPIClientService<FitbitApiAlarmAgent>(
-				new FitbitApiAlarmAgent(apiBaseUrl, fitbitSiteBaseUrl,
-						credentialsCache), clientConsumerKey, clientSecret,
-				credentialsCache, entityCache, subscriptionStore);
-
-		ResourceCredentialsAO ao = new ResourceCredentialsAO();
-		List<ResourceCredentials> list = ao.getResourceCredentials();
-		ResourceCredentials rc = list.get(0);
-		APIResourceCredentials resourceCredentials = new APIResourceCredentials(
-				"-", "", "");
-		resourceCredentials.setAccessToken(rc.getAccessToken());
-		resourceCredentials.setAccessTokenSecret(rc.getAccessTokenSecret());
-		resourceCredentials.setResourceId(rc.getResourceId());
-		resourceCredentials.setLocalUserId(rc.getLocalUserId());
-		apiClientService.saveResourceCredentials(new LocalUserDetail(
-				resourceCredentials.getLocalUserId()), resourceCredentials);
-
-		try {
-			LocalUserDetail localUser = new LocalUserDetail(resourceCredentials.getLocalUserId());
-			UserInfo userInfo = apiClientService.getClient().getUserInfo(localUser);
-			
-			List<Device> deviceList = apiClientService.getClient().getDevices(localUser);
-			Device dev = deviceList.get(0);
-			
-			String alarmId = request.getParameter("alarmId");
-			
-			PrintWriter out = response.getWriter();
-			out.print(alarmId);
-			//apiClientService.getClient().deleteAlarm(localUser,dev.getId(),alarmId);
-			
-			 //request.getRequestDispatcher("/getAlarm.jsp").forward(request, response);
-			
-		} catch (FitbitAPIException e) {
-			throw new ServletException("Exception during getting user info", e);
-
-		}
-	}
+	
+//	protected void doDelete(HttpServletRequest request,
+//			HttpServletResponse response) throws IOException, ServletException {
+//		FitbitAPIClientService<FitbitApiAlarmAgent> apiClientService = new FitbitAPIClientService<FitbitApiAlarmAgent>(
+//				new FitbitApiAlarmAgent(apiBaseUrl, fitbitSiteBaseUrl,
+//						credentialsCache), clientConsumerKey, clientSecret,
+//				credentialsCache, entityCache, subscriptionStore);
+//
+//		ResourceCredentialsAO ao = new ResourceCredentialsAO();
+//		List<ResourceCredentials> list = ao.getResourceCredentials();
+//		ResourceCredentials rc = list.get(0);
+//		APIResourceCredentials resourceCredentials = new APIResourceCredentials(
+//				"-", "", "");
+//		resourceCredentials.setAccessToken(rc.getAccessToken());
+//		resourceCredentials.setAccessTokenSecret(rc.getAccessTokenSecret());
+//		resourceCredentials.setResourceId(rc.getResourceId());
+//		resourceCredentials.setLocalUserId(rc.getLocalUserId());
+//		apiClientService.saveResourceCredentials(new LocalUserDetail(
+//				resourceCredentials.getLocalUserId()), resourceCredentials);
+//
+//		try {
+//			LocalUserDetail localUser = new LocalUserDetail(resourceCredentials.getLocalUserId());
+//			UserInfo userInfo = apiClientService.getClient().getUserInfo(localUser);
+//			
+//			List<Device> deviceList = apiClientService.getClient().getDevices(localUser);
+//			Device dev = deviceList.get(0);
+//			
+//			
+//			
+//			String alarmId = request.getParameter("alarmId");
+//			
+//			PrintWriter out = response.getWriter();
+//			out.print(alarmId);
+//			//apiClientService.getClient().deleteAlarm(localUser,dev.getId(),alarmId);
+//			
+//			 //request.getRequestDispatcher("/getAlarm.jsp").forward(request, response);
+//			
+//		} catch (FitbitAPIException e) {
+//			throw new ServletException("Exception during getting user info", e);
+//
+//		}
+//	}
 }

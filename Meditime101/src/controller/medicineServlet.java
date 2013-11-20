@@ -27,10 +27,13 @@ public class medicineServlet extends HttpServlet{
 		
 		List<MedicineData> medicineJson = md.getMedicineData();
 		
+		request.setAttribute("medicine", medicineJson);
+		
+		
 	    request.getRequestDispatcher("/checkMedicine.jsp").forward(request, response);
 		
 		PrintWriter out = response.getWriter();
-		out.println(medicineJson.get(0).getName());	
+		out.println(medicineJson.get(0));
 	}
 	
 	

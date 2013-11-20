@@ -4,31 +4,44 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Alarms</title>
+
+    <link rel="stylesheet" href="../css/bootstrap.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="../css/sbootstrap-theme.css" type="text/css" media="screen" />
+        <script src="../js/bootstrap.js"></script>
+
 </head>
 <body>
-<table>
-        <tr>
-        <td>alarm :</td>
-        <td> <%= request.getAttribute("alarm") %></td>
-    </tr>     
-        <tr>
-        <td>recurring :</td>
-        <td> <%= request.getAttribute("recurring") %></td>
-    </tr>  
-        <tr>
-        <td>occuring :</td>
-        <td> <%= request.getAttribute("occuring") %></td>
-    </tr>   
-        <tr>
-        <td>weekDays :</td>
-        <td> <%= request.getAttribute("weekDays") %></td>
-    </tr>    
-<tr>
-<td>
-<input type="image" src="file:///Users/Guest/Desktop/ + <%= request.getAttribute("imageUrl") %>">
-</td>
-</tr>
-</table>
+<div class="container">
+
+      <div class="masthead">
+        <h3 class="text-muted">MediTime</h3>
+        <ul class="nav nav-justified">
+          <li class="active"><a href="index.html">Home</a></li>
+          <li><a href="fitbitApiAuthExample">Personal Information</a></li>
+          <li><a href="#">Alarm</a></li>
+          <li><a href="medicine.jsp">Medicine</a></li>
+        </ul>
+      </div>
+
+      <!-- Jumbotron -->
+      <div class="jumbotron">
+        <h1>Set Alarm</h1>
+        <p class="lead">By providing the time and interval between the medicines, it would result in vibrate on the fitbit flex which would then be worn by the elderly to remind them to eat their medicine. </p>
+        <!-- <p><a class="btn btn-lg btn-success" href="#" role="button">Get started today</a></p> -->
+      </div>
+
+      <!-- Example row of columns -->
+
+
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    
+      <!-- Site footer -->
+      <div class="footer">
+        <p>&copy; Nanyang Polytechnic FYPJ 2013</p>
+      </div>
+
+    </div> <!-- /container -->
 </body>
 </html>

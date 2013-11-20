@@ -35,64 +35,49 @@
 
       <!-- Example row of columns -->
 
-<!--  <form action="/setAlarm" method="post">
-<table>
-<thead>Set an Alarm
-</thead>
-<tr>
-<td>Time : </td>
-<td><input type ='textbox' name="alarmTime" id="alarmTime">
-</td>
-</tr>
-<tr>
-<td>Duration :
-</td>
-<td>
-<select id="duration" name="duration">
-<option value ="0">Once per Day</option>
-<option value ="6">Every 6 hours</option>
-<option value ="8">Every 8 hours</option>
-<option value ="12">Every 12 hours</option>
 
-</select>
-</td>
-</tr>
-
-</table>
-
-<button>Cancel</button>
-<button>Save</button>
-
-</form> -->
-
-<form class="form-horizontal" role="form" action="/setAlarm" method="post">
+<form class="form-horizontal" role="form" action="/PendingAlarm.jsp" method="post">
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-2 control-label">Time</label>
+    <label for="inputEmail3" class="col-sm-2 control-label">Time : </label>
     <div class="col-sm-10">
       <input type='textbox' class="form-control" id="alarmTime" placeholder="HH:MM" name="alarmTime">
     </div>
   </div>
-  <div class="form-group">
+  
+ <!-- MEDICINE -->
+ <div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">Name of Medicine : </label>
+    <div class="col-sm-10">
+      <input type='textbox' class="form-control" id="alarmTime" placeholder="Medicine Name" name="name">
+    </div>
+  </div>
+  
+ <div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">Number of Tablets : </label>
+    <div class="col-sm-10">
+      <input type='textbox' class="form-control" id="tablets" placeholder="Number of Tablets" name="tablet">
+    </div>
+  </div>
+  
+ <div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">Starting Date : </label>
+    <div class="col-sm-10">
+      <input type='textbox' class="form-control" id="date" placeholder="DD/MM/YYYY" name="date">
+    </div>
+  </div> 
+  
+    <div class="form-group">
     <label for="inputPassword3" class="col-sm-2 control-label">Interval</label>
     <div class="col-sm-10">
-      <select id="duration" name="duration" class="form-control">
-<option value ="0">Once per Day</option>
-<option value ="6">Every 6 hours</option>
-<option value ="8">Every 8 hours</option>
-<option value ="12">Every 12 hours</option>
+      <select id="duration1" name="duration1" class="form-control">
+<option value ="once">Once per Day</option>
+<option value ="quad">Every 6 hours</option>
+<option value ="thrice">Every 8 hours</option>
+<option value ="twice">Every 12 hours</option>
 </select>
     </div>
   </div>
-  
-  <div class="form-group">
-    <label for="exampleInputFile">File input</label>
-    <input type="file" id="exampleInputFile" name="inputFile">
-  </div>
-  
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-    </div>
-  </div>
+
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <button type="submit" class="btn btn-default">Submit</button>
